@@ -1,2 +1,3 @@
-# settle
+# Settle
+
 Settle your favorite packages on your fresh installed Linux distribution

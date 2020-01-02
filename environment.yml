@@ -1,0 +1,6 @@
+name: settle
+channels:
+    - defaults
+dependencies:
+    - python>=3.6
+    - pip
