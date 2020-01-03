@@ -1,6 +1,8 @@
 ![Settle](logo/settle.png)
 
-Settle your favorite packages on your fresh installed Linux distribution
+> Settle your favorite packages on your fresh installed Linux distribution
+
+## About
 
 Settle helps you to install your favourite packages on your fresh installed Linux
 distribution.
@@ -96,9 +98,12 @@ system:
 
 ## Related projects
 
-- https://github.com/snwh/ubuntu-post-install
-- https://github.com/Cyclenerd/postinstall
-- https://github.com/ansible/ansible
+There are some other projects that address the same problem: make post installation
+easier. Here there are some of them:
+
+- [snwh/ubunut-post-install](https://github.com/snwh/ubuntu-post-install)
+- [Cyclenerd/postinstall](https://github.com/Cyclenerd/postinstall)
+- [Ansible](https://github.com/ansible/ansible)
 
 ## License
 
