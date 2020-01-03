@@ -4,17 +4,25 @@ Define classes for using different package managers
 import subprocess
 import platform
 
+from .distros import DISTROS_PACKAGE_MANAGERS
+
 
 def get_package_manager():
     """
-    Get an instance of the package manager class for your platform
+    Get the package manager class suited for your Linux distribution
+
+    Return
+    ------
+    package_manager : str
+        Name of the package manager class that must be used on the
+        current platform.
     """
     distribution = platform.dist()[0]
     distribution = distribution.lower()
-    if distribution not in DISTRIBUTIONS:
+    if distribution not in DISTROS_PACKAGE_MANAGERS:
         return None
     else:
-        return DISTRIBUTIONS[distribution]
+        return DISTROS_PACKAGE_MANAGERS[distribution]
 
 
 class BaseManager(object):
@@ -84,11 +92,3 @@ class Apt(BaseManager):
             "update_packages": "apt-get upgrade",
             "install_packages": "apt-get install",
         }
-
-
-PACKAGE_MANAGERS = [Pacman, Apt]
-DISTRIBUTIONS = {
-    "arch": Pacman,
-    "ubuntu": Apt,
-    "debian": Apt,
-}

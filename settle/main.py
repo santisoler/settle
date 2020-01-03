@@ -5,10 +5,13 @@ import os
 import subprocess
 import yaml
 import inquirer
+import platform
 
+from . import package_managers
+from .package_managers import get_package_manager
+from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
 from .argparser import create_argparser
 from .utils import check_valid_default
-from .package_managers import get_package_manager, PACKAGE_MANAGERS
 
 
 def main():
@@ -28,7 +31,6 @@ def main():
 
     # Get package manager class
     package_manager = get_package_manager()
-    package_manager = package_manager()
     if package_manager is None:
         questions.append(
             inquirer.List(
@@ -38,7 +40,7 @@ def main():
             )
         )
 
-    # Ask questions
+    # Ask questions and get answers
     questions += [
         inquirer.Confirm(
             "update_lists",
@@ -56,20 +58,32 @@ def main():
             choices=list(packages.keys()),
             default=default,
         ),
+        inquirer.Confirm(
+            "run_tasks",
+            message="Do you really want to perform the chosen tasks?",
+            default=True,
+        ),
     ]
     answers = inquirer.prompt(questions)
-    print(answers)
 
-    # Run tasks
-    if answers["update_packages"]:
-        package_manager.update_lists()
-        package_manager.update_packages()
-    if answers["update_lists"] and not answers["update_packages"]:
-        package_manager.update_lists()
-    if answers["install_packages"]:
-        chosen_packages = []
-        for group in answers["install_packages"]:
-            chosen_packages += packages[group]
-        if not package_manager.lists_updated:
+    # Continue only if the last confirmation question is true
+    if answers["run_tasks"]:
+
+        # Initialize package manager
+        if "package_manager" in answers:
+            package_manager = answers["package_manager"]
+        package_manager = getattr(package_managers, package_manager)()
+
+        # Run tasks
+        if answers["update_packages"]:
             package_manager.update_lists()
-        package_manager.install(chosen_packages)
+            package_manager.update_packages()
+        if answers["update_lists"] and not answers["update_packages"]:
+            package_manager.update_lists()
+        if answers["install_packages"]:
+            chosen_packages = []
+            for group in answers["install_packages"]:
+                chosen_packages += packages[group]
+            if not package_manager.lists_updated:
+                package_manager.update_lists()
+            package_manager.install(chosen_packages)
