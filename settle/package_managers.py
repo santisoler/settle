@@ -72,6 +72,7 @@ class Pacman(BaseManager):
     """
 
     def __init__(self, sudo=True):
+        super().__init__()
         self.sudo = sudo
         self.commands = {
             "update_lists": "pacman -Sy",
@@ -86,6 +87,7 @@ class Apt(BaseManager):
     """
 
     def __init__(self, sudo=True):
+        super().__init__()
         self.sudo = sudo
         self.commands = {
             "update_lists": "apt-get update",

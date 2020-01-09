@@ -2,6 +2,7 @@
 Main function for running Settle
 """
 import os
+import sys
 import subprocess
 import yaml
 import inquirer
@@ -56,7 +57,7 @@ def main():
             default=default,
         ),
         inquirer.Confirm(
-            "run_tasks",
+            "continue",
             message="Do you really want to perform the chosen tasks?",
             default=True,
         ),
@@ -64,21 +65,22 @@ def main():
     answers = inquirer.prompt(questions, theme=load_theme_from_dict(inquirer_theme))
 
     # Continue only if the last confirmation question is true
-    if answers["run_tasks"]:
+    if not answers["continue"]:
+        sys.exit()
 
-        # Initialize package manager
-        if "package_manager" in answers:
-            package_manager = answers["package_manager"]
-        package_manager = getattr(package_managers, package_manager)()
+    # Initialize package manager
+    if "package_manager" in answers:
+        package_manager = answers["package_manager"]
+    package_manager = getattr(package_managers, package_manager)()
 
-        # Run tasks
-        if answers["update_packages"]:
+    # Run tasks
+    if answers["update_packages"]:
+        package_manager.update_lists()
+        package_manager.update_packages()
+    if answers["install_packages"]:
+        chosen_packages = []
+        for group in answers["install_packages"]:
+            chosen_packages += packages[group]
+        if not package_manager.lists_updated:
             package_manager.update_lists()
-            package_manager.update_packages()
-        if answers["install_packages"]:
-            chosen_packages = []
-            for group in answers["install_packages"]:
-                chosen_packages += packages[group]
-            if not package_manager.lists_updated:
-                package_manager.update_lists()
-            package_manager.install(chosen_packages)
+        package_manager.install(chosen_packages)
