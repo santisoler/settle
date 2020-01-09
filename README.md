@@ -39,10 +39,13 @@ Then run Settle:
 settle packages.yml
 ```
 
-Now Settle will ask you if you want to refresh the packages lists, update all the
-installed packages and then will ask you which packages you want to install:
+Now Settle will ask you if you want update all the
+installed packages and/or which packages you want to install:
 
 ![Settle example](settle_example.gif)
+
+By default Settle will refresh packages lists before performing any tasks in order to
+avoid problems with old-dated packages.
 
 
 ## How to install
