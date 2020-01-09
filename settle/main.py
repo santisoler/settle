@@ -6,12 +6,14 @@ import subprocess
 import yaml
 import inquirer
 import platform
+from inquirer.themes import load_theme_from_dict
 
 from . import package_managers
 from .package_managers import get_package_manager
 from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
 from .argparser import create_argparser
 from .utils import check_valid_default
+from .inquirer_theme import inquirer_theme
 
 
 def main():
@@ -59,7 +61,7 @@ def main():
             default=True,
         ),
     ]
-    answers = inquirer.prompt(questions)
+    answers = inquirer.prompt(questions, theme=load_theme_from_dict(inquirer_theme))
 
     # Continue only if the last confirmation question is true
     if answers["run_tasks"]:
