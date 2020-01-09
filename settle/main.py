@@ -43,11 +43,6 @@ def main():
     # Ask questions and get answers
     questions += [
         inquirer.Confirm(
-            "update_lists",
-            message="Do you want to refresh repositories databases?",
-            default=True,
-        ),
-        inquirer.Confirm(
             "update_packages",
             message="Do you want to update all packages?",
             default=True,
@@ -78,8 +73,6 @@ def main():
         if answers["update_packages"]:
             package_manager.update_lists()
             package_manager.update_packages()
-        if answers["update_lists"] and not answers["update_packages"]:
-            package_manager.update_lists()
         if answers["install_packages"]:
             chosen_packages = []
             for group in answers["install_packages"]:
