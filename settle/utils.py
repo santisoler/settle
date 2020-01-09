@@ -3,7 +3,7 @@ Utils functions for Settle
 """
 
 
-def check_valid_default(packages, default):
+def check_valid_default_packages(packages, default):
     "Check if the groups in default are valid"
     missing_groups = [group for group in default if group not in packages]
     if missing_groups:
