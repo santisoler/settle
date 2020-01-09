@@ -1,0 +1,9 @@
+default:
+    - core
+
+core:
+    - tilix
+    - gnome-system-monitor
+
+bash:
+    - neovim
