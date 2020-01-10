@@ -44,7 +44,7 @@ def main():
     if answers["update_packages"]:
         package_manager.update_lists()
         package_manager.update_packages()
-    if answers["packages"]:
+    if answers["install_packages"]:
         if not package_manager.lists_updated:
             package_manager.update_lists()
         package_manager.install(answers["install_packages"])
