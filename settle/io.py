@@ -1,5 +1,5 @@
 """
-Functions to read and save files
+Function for reading packages YAML file
 """
 import yaml
 
