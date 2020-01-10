@@ -29,7 +29,7 @@ def main():
     package_manager = get_package_manager()
 
     # Check if Settle is being run by root (root has uid == 0)
-    add_sudo = (os.getuid() != 0)
+    add_sudo = os.getuid() != 0
 
     # Ask questions
     asker = Asker(packages, default_packages, package_manager)
