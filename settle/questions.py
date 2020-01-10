@@ -14,7 +14,7 @@ INQUIRER_THEME = {
         "brackets_color": "normal",
         "default_color": "normal",
     },
-    "Editor": {"opening_prompt_color": "bright_black",},
+    "Editor": {"opening_prompt_color": "bright_black"},
     "Checkbox": {
         "selection_color": "normal",
         "selection_icon": ">",
