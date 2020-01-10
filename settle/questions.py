@@ -5,7 +5,6 @@ import inquirer
 from inquirer.themes import load_theme_from_dict
 
 from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
-from .utils import check_valid_default_packages
 
 
 # Define a custom theme for Inquirer
@@ -39,12 +38,10 @@ class Asker():
     Ask questions to know which actions must be performed
     """
 
-    def __init__(self, packages, package_manager):
+    def __init__(self, packages, default_packages, package_manager):
         self.packages = packages
+        self.default_packages = default_packages
         self.package_manager = package_manager
-        self.default_packages = []
-        # Pop default categories
-        self._pop_default_packages()
         # Create questions
         self.questions = self.create_questions()
 
@@ -76,14 +73,6 @@ class Asker():
             self.confirmation,
         ]
         return questions
-
-    def _pop_default_packages(self):
-        """
-        Pop the default section and define default_packages attribute
-        """
-        if "default" in self.packages:
-            self.default_packages = self.packages.pop("default")
-            check_valid_default_packages(self.packages, self.default_packages)
 
     @property
     def inquirer_theme(self):

@@ -14,6 +14,7 @@ from .package_managers import get_package_manager
 from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
 from .argparser import create_argparser
 from .questions import Asker
+from .io import read_packages_yaml
 
 
 def main():
@@ -22,13 +23,13 @@ def main():
     arguments = parser.parse_args()
 
     # Read packages.yml and get defaults
-    packages = yaml.load(arguments.packages, Loader=yaml.FullLoader)
+    packages, default_packages = read_packages_yaml(arguments.packages)
 
     # Get package manager class
     package_manager = get_package_manager()
 
     # Ask questions
-    asker = Asker(packages, package_manager)
+    asker = Asker(packages, default_packages, package_manager)
     answers = asker.ask_questions()
 
     # Continue only if the last confirmation question is true
