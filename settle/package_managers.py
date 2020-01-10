@@ -32,7 +32,8 @@ class BaseManager(object):
     This is not intended to be used directly, just to subclass it.
     """
 
-    def __init__(self):
+    def __init__(self, sudo):
+        self.sudo = sudo
         self._lists_updated = False
 
     @property
@@ -72,8 +73,7 @@ class Pacman(BaseManager):
     """
 
     def __init__(self, sudo=True):
-        super().__init__()
-        self.sudo = sudo
+        super().__init__(sudo=sudo)
         self.commands = {
             "update_lists": "pacman -Sy",
             "update_packages": "pacman -Su",
@@ -87,8 +87,7 @@ class Apt(BaseManager):
     """
 
     def __init__(self, sudo=True):
-        super().__init__()
-        self.sudo = sudo
+        super().__init__(sudo=sudo)
         self.commands = {
             "update_lists": "apt-get update",
             "update_packages": "apt-get upgrade",
