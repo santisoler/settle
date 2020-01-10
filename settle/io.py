@@ -9,16 +9,16 @@ def read_packages_yaml(packages_yaml):
     Read packages YAML file
     """
     packages = yaml.load(packages_yaml, Loader=yaml.FullLoader)
-    # Pop default packages if any
-    default_packages = []
+    # Pop default categories if any
+    default_categories = []
     if "default" in packages:
-        default_packages = packages.pop("default")
-        _check_valid_default_packages(packages, default_packages)
-    return packages, default_packages
+        default_categories = packages.pop("default")
+        _check_valir_default_categories(packages, default_categories)
+    return packages, default_categories
 
 
-def _check_valid_default_packages(packages, default):
-    "Check if the groups in default are valid"
+def _check_valir_default_categories(packages, default):
+    "Check if the categories in default are valid"
     missing_groups = [group for group in default if group not in packages]
     if missing_groups:
         if len(missing_groups) == 1:
