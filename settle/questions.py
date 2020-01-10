@@ -14,26 +14,24 @@ INQUIRER_THEME = {
         "brackets_color": "normal",
         "default_color": "normal",
     },
-    "Editor": {
-        "opening_prompt_color": "bright_black",
-    },
+    "Editor": {"opening_prompt_color": "bright_black",},
     "Checkbox": {
         "selection_color": "normal",
-        "selection_icon": '>',
-        "selected_icon": '[x]',
+        "selection_icon": ">",
+        "selected_icon": "[x]",
         "selected_color": "bold_yellow",
         "unselected_color": "normal",
-        "unselected_icon": '[ ]',
+        "unselected_icon": "[ ]",
     },
     "List": {
         "selection_color": "blue",
         "selection_cursor": ">",
         "unselected_color": "normal",
-    }
+    },
 }
 
 
-class Asker():
+class Asker:
     """
     Ask questions to know which actions must be performed
     """
