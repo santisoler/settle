@@ -26,4 +26,9 @@ def create_argparser():
         action="store_true",
         help="list all packages inside packages.yml instead of showing categories",
     )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="perform a trial run, but no changes will be made",
+    )
     return parser
