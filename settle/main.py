@@ -23,7 +23,7 @@ def main():
     arguments = parser.parse_args()
 
     # Read packages.yml and get defaults
-    packages, default_packages = read_packages_yaml(arguments.packages)
+    packages_dict, default_categories = read_packages_yaml(arguments.packages)
 
     # Get package manager class
     package_manager = get_package_manager()
@@ -32,7 +32,12 @@ def main():
     add_sudo = os.getuid() != 0
 
     # Ask questions
-    asker = Asker(packages, default_packages, package_manager)
+    asker = Asker(
+        packages_dict,
+        default_categories,
+        package_manager,
+        list_packages=arguments.list_packages,
+    )
     answers = asker.ask_questions()
 
     # Continue only if the last confirmation question is true

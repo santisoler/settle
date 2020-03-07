@@ -36,10 +36,13 @@ class Asker:
     Ask questions to know which actions must be performed
     """
 
-    def __init__(self, packages, default_packages, package_manager):
-        self.packages = packages
-        self.default_packages = default_packages
+    def __init__(
+        self, packages_dict, default_categories, package_manager, list_packages=False
+    ):
+        self.packages_dict = packages_dict
+        self.default_categories = default_categories
         self.package_manager = package_manager
+        self.list_packages = list_packages
         # Create questions
         self.questions = self.create_questions()
 
@@ -50,10 +53,7 @@ class Asker:
         # Ask questions
         answers = inquirer.prompt(self.questions, theme=self.inquirer_theme)
         # Create list of chosen packages if any category has been chosen
-        answers["install_packages"] = []
-        if answers["categories"]:
-            for group in answers["categories"]:
-                answers["install_packages"] += self.packages[group]
+        answers["install_packages"] = self.get_install_packages_list(answers)
         return answers
 
     def create_questions(self):
@@ -65,12 +65,28 @@ class Asker:
         if self.package_manager is None:
             questions.append(self.package_manager_question)
         # Add more questions
-        questions += [
-            self.update_packages_question,
-            self.choose_packages_question,
-            self.confirmation,
-        ]
+        questions.append(self.update_packages_question)
+        if self.list_packages:
+            questions.append(self.choose_packages_question)
+        else:
+            questions.append(self.choose_categories_question)
+        questions.append(self.confirmation)
         return questions
+
+    def get_install_packages_list(self, answers):
+        """
+        Create the list of all packages that must be installed
+
+        The list of all packages that must be installed is created after the answers
+        recovered from the Asker instance.
+        """
+        install_packages = []
+        if "categories" in answers:
+            for category in answers["categories"]:
+                install_packages += self.packages_dict[category]
+        elif "packages" in answers:
+            install_packages = answers["packages"]
+        return install_packages
 
     @property
     def inquirer_theme(self):
@@ -105,11 +121,32 @@ class Asker:
         """
         Return question about which packages should be installed
         """
+        # Get list of all packages and the packages inside the default categories
+        all_packages = []
+        default_packages = []
+        for category, packages in self.packages_dict.items():
+            all_packages += packages
+            if category in self.default_categories:
+                default_packages += packages
+        # Create question
+        question = inquirer.Checkbox(
+            "packages",
+            message="What packages do you want to install?",
+            choices=all_packages,
+            default=default_packages,
+        )
+        return question
+
+    @property
+    def choose_categories_question(self):
+        """
+        Return question about which packages should be installed based on categories
+        """
         question = inquirer.Checkbox(
             "categories",
             message="What packages do you want to install?",
-            choices=list(self.packages.keys()),
-            default=self.default_packages,
+            choices=list(self.packages_dict.keys()),
+            default=self.default_categories,
         )
         return question
 

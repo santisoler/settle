@@ -20,4 +20,10 @@ def create_argparser():
         help=PACKAGES_HELP_LINE,
         default="",
     )
+    parser.add_argument(
+        "--list-packages",
+        "-l",
+        action="store_true",
+        help="list all packages inside packages.yml instead of showing categories",
+    )
     return parser
