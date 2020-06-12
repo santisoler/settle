@@ -11,7 +11,6 @@ from inquirer.themes import load_theme_from_dict
 
 from . import package_managers
 from .package_managers import get_package_manager
-from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
 from .argparser import create_argparser
 from .questions import Asker
 from .io import read_packages_yaml
@@ -25,29 +24,19 @@ def main():
     # Read packages.yml and get defaults
     packages_dict, default_categories = read_packages_yaml(arguments.packages)
 
-    # Get package manager class
-    package_manager = get_package_manager()
-
-    # Check if Settle is being run by root (root has uid == 0)
-    add_sudo = os.getuid() != 0
+    # Get package manager instance
+    package_manager = get_package_manager(arguments.package_manager)
+    package_manager = getattr(package_managers, package_manager)()
 
     # Ask questions
     asker = Asker(
-        packages_dict,
-        default_categories,
-        package_manager,
-        list_packages=arguments.list_packages,
+        packages_dict, default_categories, list_packages=arguments.list_packages,
     )
     answers = asker.ask_questions()
 
     # Continue only if the last confirmation question is true
     if not answers["continue"]:
         sys.exit()
-
-    # Initialize package manager
-    if "package_manager" in answers:
-        package_manager = answers["package_manager"]
-    package_manager = getattr(package_managers, package_manager)(sudo=add_sudo)
 
     # Run tasks
     if answers["update_packages"]:
