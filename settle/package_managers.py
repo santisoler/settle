@@ -8,31 +8,64 @@ import platform
 # Define dictionary matching linux distro to package manager classname
 # defined in settle/package_managers.py
 DISTROS_PACKAGE_MANAGERS = {
-    "arch": "Pacman",
-    "ubuntu": "Apt",
-    "debian": "Apt",
+    "arch": "pacman",
+    "ubuntu": "apt",
+    "debian": "apt",
 }
 
-# Define list of package managers
-PACKAGE_MANAGERS = list(set(DISTROS_PACKAGE_MANAGERS.values()))
+# Define list of supported package managers
+PACKAGE_MANAGERS = ["apt", "pacman"]
+
+# Dictionary with package managers and corresponding classes
+PACKAGE_MANAGERS_CLASSES = {
+    "apt": "Apt",
+    "pacman": "Pacman",
+}
 
 
-def get_package_manager():
+def get_package_manager(package_manager=None):
     """
-    Get the package manager class suited for your Linux distribution
+    Get the package manager class that will manage the installations
+
+    Parameters
+    ----------
+    package_manager: str (optional)
+        Package manager name. If None, the better suited package manager will be chosen
+        based on the distro.
+
+    Returns
+    -------
+    package_manager_classname: str
+        Name of the package manager class.
+    """
+    if package_manager is None:
+        package_manager = guess_package_manager()
+    else:
+        if package_manager not in PACKAGE_MANAGERS:
+            raise ValueError("Invalid package manager '{}'".format(package_manager))
+    return PACKAGE_MANAGERS_CLASSES[package_manager]
+
+
+def guess_package_manager():
+    """
+    Guess which package manager class is suited for your Linux distribution
 
     Return
     ------
     package_manager : str
-        Name of the package manager class that must be used on the
-        current platform.
+        Name of the package manager
     """
     distribution = platform.dist()[0]
     distribution = distribution.lower()
     if distribution not in DISTROS_PACKAGE_MANAGERS:
-        return None
-    else:
-        return DISTROS_PACKAGE_MANAGERS[distribution]
+        raise ValueError(
+            "Couldn't choose a package manager for your distro. "
+            + "This may be caused because your distro is not supported or "
+            + "Settle cannot identify it properly. "
+            + "Try specifying the package manager you want to use through the "
+            + "--package-manager option."
+        )
+    return DISTROS_PACKAGE_MANAGERS[distribution]
 
 
 class BaseManager(object):

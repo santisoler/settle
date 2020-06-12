@@ -4,8 +4,6 @@ Function to ask questions and get answers
 import inquirer
 from inquirer.themes import load_theme_from_dict
 
-from .package_managers import PACKAGE_MANAGERS
-
 
 # Define a custom theme for Inquirer
 INQUIRER_THEME = {
@@ -36,12 +34,9 @@ class Asker:
     Ask questions to know which actions must be performed
     """
 
-    def __init__(
-        self, packages_dict, default_categories, package_manager, list_packages=False
-    ):
+    def __init__(self, packages_dict, default_categories, list_packages=False):
         self.packages_dict = packages_dict
         self.default_categories = default_categories
-        self.package_manager = package_manager
         self.list_packages = list_packages
         # Create questions
         self.questions = self.create_questions()
@@ -61,9 +56,6 @@ class Asker:
         Create all inquirer questions
         """
         questions = []
-        # Ask which package manager should we use if it's None
-        if self.package_manager is None:
-            questions.append(self.package_manager_question)
         # Add more questions
         questions.append(self.update_packages_question)
         if self.list_packages:
@@ -91,18 +83,6 @@ class Asker:
     @property
     def inquirer_theme(self):
         return load_theme_from_dict(INQUIRER_THEME)
-
-    @property
-    def package_manager_question(self):
-        """
-        Return question asking about what package manager should we use
-        """
-        question = inquirer.List(
-            "package_manager",
-            message="What package manager should we use?",
-            choices=PACKAGE_MANAGERS,
-        )
-        return question
 
     @property
     def update_packages_question(self):

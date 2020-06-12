@@ -3,6 +3,8 @@ Create argument parser for Settle
 """
 import argparse
 
+from .package_managers import PACKAGE_MANAGERS
+
 
 DESCRIPTION = "Settle your favorite packages on your fresh installed Linux distribution"
 PACKAGES_HELP_LINE = "YAML file containing packages names."
@@ -25,5 +27,16 @@ def create_argparser():
         "-l",
         action="store_true",
         help="list all packages inside packages.yml instead of showing categories",
+    )
+    parser.add_argument(
+        "-p",
+        "--package-manager",
+        type=str,
+        help=(
+            "which package manager to use. If no package manager is specified, "
+            + "Settle will guess which one to use based on your distro. "
+            + "The supported package managers are: "
+            + "{}.".format(", ".join(PACKAGE_MANAGERS))
+        ),
     )
     return parser
