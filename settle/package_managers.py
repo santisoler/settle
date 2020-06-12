@@ -5,7 +5,16 @@ import os
 import subprocess
 import platform
 
-from .distros import DISTROS_PACKAGE_MANAGERS
+# Define dictionary matching linux distro to package manager classname
+# defined in settle/package_managers.py
+DISTROS_PACKAGE_MANAGERS = {
+    "arch": "Pacman",
+    "ubuntu": "Apt",
+    "debian": "Apt",
+}
+
+# Define list of package managers
+PACKAGE_MANAGERS = list(set(DISTROS_PACKAGE_MANAGERS.values()))
 
 
 def get_package_manager():

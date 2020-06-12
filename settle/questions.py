@@ -4,7 +4,7 @@ Function to ask questions and get answers
 import inquirer
 from inquirer.themes import load_theme_from_dict
 
-from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
+from .package_managers import PACKAGE_MANAGERS
 
 
 # Define a custom theme for Inquirer

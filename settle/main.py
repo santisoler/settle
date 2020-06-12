@@ -11,7 +11,6 @@ from inquirer.themes import load_theme_from_dict
 
 from . import package_managers
 from .package_managers import get_package_manager
-from .distros import DISTROS_PACKAGE_MANAGERS, PACKAGE_MANAGERS
 from .argparser import create_argparser
 from .questions import Asker
 from .io import read_packages_yaml
