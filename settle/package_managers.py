@@ -14,13 +14,10 @@ DISTROS_PACKAGE_MANAGERS = {
 }
 
 # Define list of supported package managers
-PACKAGE_MANAGERS = ["apt", "pacman"]
+PACKAGE_MANAGERS = ["apt", "pacman", "yay"]
 
 # Dictionary with package managers and corresponding classes
-PACKAGE_MANAGERS_CLASSES = {
-    "apt": "Apt",
-    "pacman": "Pacman",
-}
+PACKAGE_MANAGERS_CLASSES = {p: p.title() for p in PACKAGE_MANAGERS}
 
 
 def get_package_manager(package_manager=None):
@@ -152,4 +149,17 @@ class Apt(BaseManager):
         "update_lists": "apt-get update",
         "update_packages": "apt-get upgrade",
         "install_packages": "apt-get install",
+    }
+
+
+class Yay(BaseManager):
+    """
+    Class to interact with the yay package manager
+    """
+
+    needs_sudo = False
+    commands = {
+        "update_lists": "yay -Sy",
+        "update_packages": "yay -Su",
+        "install_packages": "yay -S",
     }
