@@ -28,9 +28,6 @@ def main():
     # Get package manager class
     package_manager = get_package_manager()
 
-    # Check if Settle is being run by root (root has uid == 0)
-    add_sudo = os.getuid() != 0
-
     # Ask questions
     asker = Asker(
         packages_dict,
@@ -47,7 +44,7 @@ def main():
     # Initialize package manager
     if "package_manager" in answers:
         package_manager = answers["package_manager"]
-    package_manager = getattr(package_managers, package_manager)(sudo=add_sudo)
+    package_manager = getattr(package_managers, package_manager)()
 
     # Run tasks
     if answers["update_packages"]:

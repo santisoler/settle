@@ -1,6 +1,7 @@
 """
 Define classes for using different package managers
 """
+import os
 import subprocess
 import platform
 
@@ -30,34 +31,53 @@ class BaseManager(object):
     Base class for managing package managers
 
     This is not intended to be used directly, just to subclass it.
+    In order to subclass it, override the class attributes `needs_sudo` and `commands`
+    according to the package manager specific needs.
     """
 
-    def __init__(self, sudo):
-        self.sudo = sudo
+    # Specify if the package manager should be ran with sudo privileges
+    needs_sudo = False
+    # Specify how update lists, update packages and install packages
+    # with the package manager.
+    commands = {
+        "update_lists": None,
+        "update_packages": None,
+        "install_packages": None,
+    }
+
+    def __init__(self):
         self._lists_updated = False
 
     @property
     def lists_updated(self):
         return self._lists_updated
 
+    @property
+    def sudo(self):
+        "Check if we have sudo privileges"
+        return os.getuid() != 0
+
     def update_lists(self):
+        "Update package lists"
         commands = []
-        if self.sudo:
+        if self.needs_sudo and self.sudo:
             commands.append("sudo")
         commands.append(self.commands["update_lists"])
         self.run(commands)
         self._lists_updated = True
 
     def update_packages(self):
+        "Update packages"
         commands = []
-        if self.sudo:
+        if self.needs_sudo and self.sudo:
             commands.append("sudo")
         commands.append(self.commands["update_packages"])
         self.run(commands)
 
     def install(self, packages):
+        "Install packages"
         commands = []
-        if self.sudo:
+        if self.needs_sudo and self.sudo:
             commands.append("sudo")
         commands.append(self.commands["install_packages"])
         commands += packages
@@ -72,13 +92,12 @@ class Pacman(BaseManager):
     Class to interact with pacman package manager
     """
 
-    def __init__(self, sudo=True):
-        super().__init__(sudo=sudo)
-        self.commands = {
-            "update_lists": "pacman -Sy",
-            "update_packages": "pacman -Su",
-            "install_packages": "pacman -S",
-        }
+    needs_sudo = True
+    commands = {
+        "update_lists": "pacman -Sy",
+        "update_packages": "pacman -Su",
+        "install_packages": "pacman -S",
+    }
 
 
 class Apt(BaseManager):
@@ -86,10 +105,9 @@ class Apt(BaseManager):
     Class to interact with apt package manager
     """
 
-    def __init__(self, sudo=True):
-        super().__init__(sudo=sudo)
-        self.commands = {
-            "update_lists": "apt-get update",
-            "update_packages": "apt-get upgrade",
-            "install_packages": "apt-get install",
-        }
+    needs_sudo = True
+    commands = {
+        "update_lists": "apt-get update",
+        "update_packages": "apt-get upgrade",
+        "install_packages": "apt-get install",
+    }
