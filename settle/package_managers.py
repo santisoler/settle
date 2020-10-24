@@ -3,11 +3,12 @@ Define classes for using different package managers
 """
 import os
 import subprocess
-import platform
+import distro
 
 # Define dictionary matching linux distro to package manager classname
 # defined in settle/package_managers.py
 DISTROS_PACKAGE_MANAGERS = {
+    "manjaro linux": "pacman",
     "arch": "pacman",
     "ubuntu": "apt",
     "debian": "apt",
@@ -52,7 +53,7 @@ def guess_package_manager():
     package_manager : str
         Name of the package manager
     """
-    distribution = platform.dist()[0]
+    distribution = distro.linux_distribution()[0]
     distribution = distribution.lower()
     if distribution not in DISTROS_PACKAGE_MANAGERS:
         raise ValueError(
